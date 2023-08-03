@@ -5,6 +5,7 @@ import { removerItemFromCart } from '../../redux/actions/CartActions';
 
 
 const Cart = () => {
+    const theme = useSelector((state)=>state.themeReducer)
     const dispatch = useDispatch();
     let product = useSelector((state) => state.cartReducer.cartItem);
     const[data,setData] = useState([]);
@@ -21,19 +22,19 @@ const Cart = () => {
         dispatch(removerItemFromCart(index))
     }   
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor:theme ? 'white' :'gray'}]}>
     <View style={{marginTop:50,flex:1,marginBottom:10}}>
-    <Text style={styles.totalPrice}>Total Price: ${getTotalPrice()}</Text>
+    <Text style={[styles.totalPrice,{color:theme ? 'black' : 'white'}]}>Total Price: ${getTotalPrice()}</Text>
     <FlatList
       data={data}
       keyExtractor={(item,index)=>index.toString()}
       renderItem={({item,index})=>{
           return (
-              <View style={styles.itemView}>
+              <View style={[styles.itemView,{backgroundColor:theme ? 'white' :'gray',borderWidth:theme ? 0 :1,borderColor:theme ? '' : 'white'}]}>
                   <Image source={{uri:item.image}} style={styles.productImage}/>
                   <View style={styles.nameView}>
-                      <Text>{item.name.length > 15 ? item.name.substring(0,15)+'...' : item.name}</Text>
-                      <Text style={styles.price}>$ {item.price}</Text>
+                      <Text style={{color:theme ? 'black' :'white'}}>{item.name.length > 15 ? item.name.substring(0,15)+'...' : item.name}</Text>
+                      <Text style={[styles.price,{color:theme ? 'green' :'white'}]}>$ {item.price}</Text>
                       <Button title='Remove from cart' onPress={()=>removeItem(index)} color='red'/>
                   </View>
               </View>
@@ -61,7 +62,8 @@ const styles = StyleSheet.create({
         backgroundColor:'#fff',
         alignSelf:'center',
         marginTop:10,
-        flexDirection:'row'
+        flexDirection:'row',
+        elevation:4,
     },
     productImage:{
         width:100,

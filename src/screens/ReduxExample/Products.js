@@ -5,6 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { useDispatch, useSelector } from 'react-redux';
 import { TouchableOpacity } from 'react-native';
 import { addItemToCart } from '../../redux/actions/CartActions';
+import ThemeButton from '../../components/ThemeButton';
 
 const Products = ({navigation}) => {
     const data = [
@@ -67,26 +68,32 @@ const Products = ({navigation}) => {
       }
 
       const items = useSelector((state)=>state.cartReducer.cartItem)
+      const theme = useSelector((state)=>state.themeReducer)
       let totalItems = [];
       totalItems = items;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor:theme ? 'white' :'gray'}]}>
     <View style={styles.header}>
-            <Text style={{fontSize:24,textAlign:'center',margin:10,}}>Redux Example</Text>
-            <TouchableOpacity onPress={()=>navigation.navigate('Cart')}><Text style={{fontSize:24,textAlign:'center',margin:10,backgroundColor:'lightgreen',padding:2}}><AntDesign name='shoppingcart' size={25}/> {totalItems.length}</Text></TouchableOpacity>
+            <View>
+              <Text style={{fontSize:20,textAlign:'center',margin:10,color:theme ? 'black' :'white'}}>Redux Example</Text>
+            </View>
+            <View style={{flexDirection:'row',justifyContent:'center'}}>
+              <ThemeButton/>
+              <TouchableOpacity onPress={()=>navigation.navigate('Cart')}><Text style={{fontSize:24,textAlign:'center',margin:10,backgroundColor:'lightgreen',padding:2}}><AntDesign name='shoppingcart' size={25}/> {totalItems.length}</Text></TouchableOpacity>
+            </View>
     </View>
-    <View style={{marginTop:50,flex:1,marginBottom:10}}>
+    <View style={{marginTop:10,flex:1,marginBottom:10}}>
     <FlatList
       data={data}
       keyExtractor={(item,index)=>index.toString()}
       renderItem={({item,index})=>{
           return (
-              <View style={styles.itemView}>
+              <View style={[styles.itemView,{backgroundColor:theme ? 'white' :'gray',borderWidth:theme ? 0 :1,borderColor:theme ? '' : 'white'}]}>
                   <Image source={{uri:item.image}} style={styles.productImage}/>
                   <View style={styles.nameView}>
-                      <Text>{item.name.length > 15 ? item.name.substring(0,15)+'...' : item.name}</Text>
-                      <Text style={styles.price}>$ {item.price}</Text>
+                      <Text style={{color:theme ? 'black' :'white'}}>{item.name.length > 15 ? item.name.substring(0,15)+'...' : item.name}</Text>
+                      <Text style={[styles.price,{color:theme ? 'green' :'white'}]}>$ {item.price}</Text>
                       <Button title='Add to cart' onPress={()=>addItem(item)} color='green'/>
                   </View>
               </View>
@@ -105,16 +112,16 @@ const styles = StyleSheet.create({
         flex:1,
     },
     header:{
-        flexDirection:'row',
+        flexDirection:'column',
         justifyContent:'space-between',
     },
     itemView:{
         width:'90%',
         height:100,
-        backgroundColor:'#fff',
         alignSelf:'center',
         marginTop:10,
-        flexDirection:'row'
+        flexDirection:'row',
+        elevation:3,
     },
     productImage:{
         width:100,
